@@ -12,13 +12,20 @@
 #include <stdio.h>
 
 typedef enum {
-  READ_FILES = 0b1,
-  WRITE_FILES = 0b10,
-  DELETE_FILES = 0b100,
-  CREATE_FILES = 0b100,
-  EXECUTE_FILES = 0b1000,
+  READ_FILES = 0b00000001,
+  WRITE_FILES = 0b00000010,
+  DELETE_FILES = 0b00000100,
+  CREATE_FILES = 0b00000100,
+  EXECUTE_FILES = 0b00001000,
   SUM_NUM_PERMISSIONS,
 } permissions;
+char permissionsNames[][50] = {
+    "Read files",
+    "Write files",
+    "Delete files",
+    "Create files",
+    "Execute files"
+};
 int addSubtractPermissions();
 void checkAndPrintPermissions();
 
@@ -28,13 +35,6 @@ int main() {
   int userChoice = 0;
 
 
-  char permissionsNames[][50] = {
-      "Read files",
-      "Write files",
-      "Delete files",
-      "Create files",
-      "Execute files"
-  };
   char menuOptions[][50] = {
     "Grant permissions",
     "Revoke permissions",
@@ -42,59 +42,62 @@ int main() {
     "Exit"
   };
   int numberOfMenuOptions = sizeof(menuOptions) / sizeof(menuOptions[0]);
+  int numberOfPermissions = sizeof(permissionsNames) / sizeof(permissionsNames[0]);
 
 
   do
   {
     // *** MAIN MENU
     printf("\n*** BITWISE PERMISSIONS MANAGER ***\n");
+    printf("\nflagPermissions is currently : %d\n", flagPermissions);
     for (int i = 1; i <= numberOfMenuOptions; i++)
     {
-      printf("%d. %s\n", i, menuOptions[i]);
+      printf("%d. %s\n", i, menuOptions[i - 1]);
     }
+    printf("Enter your choice: ");
+    scanf(" %d", &userChoice);
+
     if (userChoice == 1) {
       printf("\n** GRANTING PERMISSION **\n");
       int userGrantChoice = 0;
 
-      for (int i = 1; i <= SUM_NUM_PERMISSIONS; i++)
-      {
-        printf("%d. %s\n", i, permissionsNames[i]);
+      checkAndPrintPermissions(&flagPermissions, numberOfPermissions);
 
-      }
       printf("Enter your choice: ");
       scanf(" %d", &userGrantChoice);
 
-      flagPermissions = addSubtractPermissions(ADD_BITS, userChoice, &flagPermissions);
+      printf("\nYour choice was: %d\n", userGrantChoice);
+
+      flagPermissions = addSubtractPermissions(ADD_BITS, userGrantChoice, &flagPermissions);
+
+      printf("\nSuccessfully granted a permission!\n");
     }
     if (userChoice == 2) {
       printf("\n** REVOKING PERMISSION **\n");
-      int userGrantChoice = 0;
+      int userRevokeChoice = 0;
 
-      for (int i = 1; i <= SUM_NUM_PERMISSIONS; i++)
-      {
-        printf("%d. %s\n", i, permissionsNames[i]);
-
-      }
+      checkAndPrintPermissions(&flagPermissions, numberOfPermissions);
       printf("Enter your choice: ");
-      scanf(" %d", &userGrantChoice);
+      scanf(" %d", &userRevokeChoice);
 
-      flagPermissions = addSubtractPermissions(SUBTRACT_BITS, userChoice, &flagPermissions);
+      printf("\nYour choice was: %d\n", userRevokeChoice);
+
+      flagPermissions = addSubtractPermissions(SUBTRACT_BITS, userRevokeChoice, &flagPermissions);
+
+      printf("\nSuccessfully revoked a permission!\n");
     }
     if (userChoice == 3) {
       printf("\n** VIEWING USER PERMISSIONS **\n");
+      checkAndPrintPermissions(&flagPermissions, numberOfPermissions);
     }
-
-
   } while (userChoice != 4);
 
 
-
-
-
+  return 0;
 }
 
-int addSubtractPermissions(int flagAddSubtract, int userChoice, int *flagPermissions) {
-  switch (userChoice)
+int addSubtractPermissions(int flagAddSubtract, int userGrantRevokeChoice, int *flagPermissions) {
+  switch (userGrantRevokeChoice)
   {
   case 1:
     return (flagAddSubtract == 0) ? (*flagPermissions |= READ_FILES) : (*flagPermissions &= ~READ_FILES);
@@ -117,13 +120,11 @@ int addSubtractPermissions(int flagAddSubtract, int userChoice, int *flagPermiss
   }
 };
 
-// void checkAndPrintPermissions(int *flagPermissions) {
-//   int startingBit = 0b1;
-
-//   for (int i = 1; i <= SUM_NUM_PERMISSIONS; i++)
-//   {
-//     printf("%s : %d. %s\n", (), );
-//     startingBit<<1;
-//   }
-
-// }
+void checkAndPrintPermissions(int *flagPermissions, int numberOfPermissions) {
+  int startingBit = 0b00000001;
+  for (int i = 1; i <= numberOfPermissions; i++)
+  {
+    printf("%s : %d. %s\n", (*flagPermissions & startingBit) ? ("ON ") : ("OFF"), i, permissionsNames[i - 1]);
+    startingBit = startingBit << 1;
+  }
+}
