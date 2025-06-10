@@ -5,7 +5,7 @@
 // DESCRIPTION    :       USERS HAVE PERMISSIONS.
 //                        PERMISSIONS SET BY FLIPPING BITS.
 // -
-// TIME TAKEN     :       1HR 11MIN
+// TIME TAKEN     :       1HR 13MIN 
 // TO COMPLETE
 
 #define ADD_BITS 0
@@ -14,11 +14,11 @@
 #include <stdio.h>
 
 typedef enum {
-  READ_FILES = 0b00000001,
-  WRITE_FILES = 0b00000010,
-  DELETE_FILES = 0b00000100,
-  CREATE_FILES = 0b000001000,
-  EXECUTE_FILES = 0b000010000,
+  READ_FILES = 1 << 0,
+  WRITE_FILES = 1 << 1,
+  DELETE_FILES = 1 << 2,
+  CREATE_FILES = 1 << 3,
+  EXECUTE_FILES = 1 << 4,
   SUM_NUM_PERMISSIONS,
 } permissions;
 char permissionsNames[][50] = {
@@ -35,7 +35,6 @@ int main() {
   unsigned int flagPermissions = 0b00000000;
 
   int userChoice = 0;
-
 
   char menuOptions[][50] = {
     "Grant permissions",
@@ -102,19 +101,19 @@ int addSubtractPermissions(int flagAddSubtract, int userGrantRevokeChoice, int *
   switch (userGrantRevokeChoice)
   {
   case 1:
-    return (flagAddSubtract == 0) ? (*flagPermissions |= READ_FILES) : (*flagPermissions &= ~READ_FILES);
+    return (flagAddSubtract == ADD_BITS) ? (*flagPermissions |= READ_FILES) : (*flagPermissions &= ~READ_FILES);
     break;
   case 2:
-    return (flagAddSubtract == 0) ? (*flagPermissions |= WRITE_FILES) : (*flagPermissions &= ~WRITE_FILES);
+    return (flagAddSubtract == ADD_BITS) ? (*flagPermissions |= WRITE_FILES) : (*flagPermissions &= ~WRITE_FILES);
     break;
   case 3:
-    return (flagAddSubtract == 0) ? (*flagPermissions |= DELETE_FILES) : (*flagPermissions &= ~DELETE_FILES);
+    return (flagAddSubtract == ADD_BITS) ? (*flagPermissions |= DELETE_FILES) : (*flagPermissions &= ~DELETE_FILES);
     break;
   case 4:
-    return (flagAddSubtract == 0) ? (*flagPermissions |= CREATE_FILES) : (*flagPermissions &= ~CREATE_FILES);
+    return (flagAddSubtract == ADD_BITS) ? (*flagPermissions |= CREATE_FILES) : (*flagPermissions &= ~CREATE_FILES);
     break;
   case 5:
-    return (flagAddSubtract == 0) ? (*flagPermissions |= EXECUTE_FILES) : (*flagPermissions &= ~EXECUTE_FILES);
+    return (flagAddSubtract == ADD_BITS) ? (*flagPermissions |= EXECUTE_FILES) : (*flagPermissions &= ~EXECUTE_FILES);
     break;
   default:
     printf("\nUser choice was invalid!\n");
@@ -123,7 +122,7 @@ int addSubtractPermissions(int flagAddSubtract, int userGrantRevokeChoice, int *
 };
 
 void checkAndPrintPermissions(int *flagPermissions, int numberOfPermissions) {
-  int startingBit = 0b00000001;
+  int startingBit = 1 << 0;
   for (int i = 1; i <= numberOfPermissions; i++)
   {
     printf("%s : %d. %s\n", (*flagPermissions & startingBit) ? ("ON ") : ("OFF"), i, permissionsNames[i - 1]);
