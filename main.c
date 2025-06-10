@@ -1,10 +1,12 @@
 // TITLE          :       BITWISE PERMISSIONS MANAGER         
 // AUTHOR         :       ichimaru001
 // DATE           :       10/06/25
-// 
+// -
 // DESCRIPTION    :       USERS HAVE PERMISSIONS.
 //                        PERMISSIONS SET BY FLIPPING BITS.
-// 2hr 23min
+// -
+// TIME TAKEN     :       1HR 11MIN
+// TO COMPLETE
 
 #define ADD_BITS 0
 #define SUBTRACT_BITS 1
@@ -15,8 +17,8 @@ typedef enum {
   READ_FILES = 0b00000001,
   WRITE_FILES = 0b00000010,
   DELETE_FILES = 0b00000100,
-  CREATE_FILES = 0b00000100,
-  EXECUTE_FILES = 0b00001000,
+  CREATE_FILES = 0b000001000,
+  EXECUTE_FILES = 0b000010000,
   SUM_NUM_PERMISSIONS,
 } permissions;
 char permissionsNames[][50] = {
@@ -49,7 +51,7 @@ int main() {
   {
     // *** MAIN MENU
     printf("\n*** BITWISE PERMISSIONS MANAGER ***\n");
-    printf("\nflagPermissions is currently : %d\n", flagPermissions);
+    // printf("\nflagPermissions is currently : %d\n", flagPermissions);
     for (int i = 1; i <= numberOfMenuOptions; i++)
     {
       printf("%d. %s\n", i, menuOptions[i - 1]);
